@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ArrowRight, Check, Smartphone, Calendar, Users, CreditCard, Bell, Database, BarChart3, Mail, FileText, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,25 +9,65 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
+interface ExchangeRates {
+  USD: number;
+  EUR: number;
+  CHF: number;
+}
+
 export default function PricingPage() {
   const [currency, setCurrency] = useState<"USD" | "EUR" | "CHF">("USD");
   const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">("annual");
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRates>({
+    USD: 1,
+    EUR: 0.9,
+    CHF: 0.92,
+  });
+  const [isLoadingRates, setIsLoadingRates] = useState(true);
 
+  // Base prices in USD
+  const basePrices = {
+    monthly: 186,
+    annual: 1874,
+    installation: 125,
+  };
+
+  // Fetch real-time exchange rates
+  useEffect(() => {
+    const fetchRates = async () => {
+      try {
+        const response = await fetch('/api/exchange-rates');
+        const data = await response.json();
+
+        if (data.success && data.rates) {
+          setExchangeRates(data.rates);
+        }
+      } catch (error) {
+        console.error('Failed to fetch exchange rates:', error);
+      } finally {
+        setIsLoadingRates(false);
+      }
+    };
+
+    fetchRates();
+  }, []);
+
+  // Calculate prices based on real-time exchange rates
   const prices = {
     monthly: {
-      USD: 186,
-      EUR: 168,
-      CHF: 172,
+      USD: basePrices.monthly,
+      EUR: Math.round(basePrices.monthly * exchangeRates.EUR),
+      CHF: Math.round(basePrices.monthly * exchangeRates.CHF),
     },
     annual: {
-      USD: 1874,
-      EUR: 1690,
-      CHF: 1730,
+      USD: basePrices.annual,
+      EUR: Math.round(basePrices.annual * exchangeRates.EUR),
+      CHF: Math.round(basePrices.annual * exchangeRates.CHF),
     },
     installation: {
-      USD: 125,
-      EUR: 113,
-      CHF: 116,
+      USD: basePrices.installation,
+      EUR: Math.round(basePrices.installation * exchangeRates.EUR),
+      CHF: Math.round(basePrices.installation * exchangeRates.CHF),
     },
   };
 
@@ -183,83 +223,19 @@ export default function PricingPage() {
             </Card>
 
             {/* Additional Info */}
-            <div className="mt-12 text-center">
-              <p className="text-sm text-muted-foreground mb-4">
+            <div className="mt-12 text-center space-y-3">
+              {!isLoadingRates && (
+                <p className="text-xs text-muted-foreground flex items-center justify-center gap-2">
+                  <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                  Live exchange rates updated
+                </p>
+              )}
+              <p className="text-sm text-muted-foreground">
                 All prices exclude VAT. Cancel anytime, no long-term commitment required.
               </p>
               <p className="text-sm text-muted-foreground">
                 Need a custom solution for your enterprise? <Link href="/contact" className="text-primary hover:underline font-medium">Contact our sales team</Link>
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-16 md:py-20 bg-gradient-to-b from-background via-accent/5 to-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-                Frequently Asked Questions
-              </h2>
-            </div>
-
-            <div className="space-y-6">
-              <Card className="border-2 hover:border-primary/30 transition-colors">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-foreground mb-2">
-                    Y a-t-il des frais d'installation?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Oui, des frais d'installation uniques de {currencySymbols[currency]}{installationFee} s'appliquent pour couvrir la configuration personnalisée, le développement de l'application et la soumission aux stores (App Store et Google Play).
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/30 transition-colors">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-foreground mb-2">
-                    Puis-je annuler à tout moment?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Oui, vous pouvez annuler votre abonnement à tout moment. Il n'y a pas de contrat à long terme ni de frais d'annulation.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/30 transition-colors">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-foreground mb-2">
-                    Que se passe-t-il après la période de lancement de 10 jours?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Votre application est mise en ligne sur l'App Store et Google Play, et votre abonnement mensuel/annuel commence. Nous fournissons un support continu, des mises à jour et une maintenance.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/30 transition-colors">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-foreground mb-2">
-                    Offrez-vous des remboursements?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Nous offrons une garantie de remboursement de 30 jours. Si vous n'êtes pas satisfait de notre service dans les 30 premiers jours, nous vous rembourserons intégralement.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 hover:border-primary/30 transition-colors">
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-bold text-foreground mb-2">
-                    Quelles sont les langues supportées?
-                  </h3>
-                  <p className="text-muted-foreground">
-                    L'application et le CRM sont disponibles en français et en anglais. Vous pouvez basculer entre les langues à tout moment dans les paramètres.
-                  </p>
-                </CardContent>
-              </Card>
             </div>
           </div>
         </div>
