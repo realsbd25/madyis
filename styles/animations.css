@@ -1,0 +1,67 @@
+/* Solaax-Style Animation Utilities */
+
+/* Smooth hover transitions for images */
+.animate-image-hover {
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-image-hover:hover {
+  filter: brightness(1.2);
+}
+
+/* Invert image on hover (for logos) */
+.animate-logo-hover {
+  transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-logo-hover:hover {
+  filter: brightness(0) invert(1);
+}
+
+/* Scale on hover */
+.animate-scale-hover {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-scale-hover:hover {
+  transform: scale(1.05);
+}
+
+/* Smooth lift effect */
+.animate-lift-hover {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-lift-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* GPU acceleration hints */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}

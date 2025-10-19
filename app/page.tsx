@@ -9,6 +9,11 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { FadeIn, ScaleIn, SlideIn, StaggerContainer, StaggerItem, Floating, Pulse } from "@/components/animations/motion-components";
 import { AnimatedCounter } from "@/components/animations/animated-counter";
+import { MouseTrailCanvas } from "@/components/animations/mouse-trail-canvas";
+import { AnimatedText } from "@/components/animations/AnimatedText";
+import { ScrollReveal } from "@/components/animations/ScrollReveal";
+import { StaggeredGrid } from "@/components/animations/StaggeredGrid";
+import { OrbitalCards3D } from "@/components/animations/OrbitalCards3D";
 import { useEffect } from "react";
 
 export default function HomePage() {
@@ -57,9 +62,13 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-40 lg:pb-28 overflow-hidden">
+        {/* Mouse Trail Canvas Background */}
+        <MouseTrailCanvas />
+
         {/* Animated Background Gradient */}
         <motion.div
           className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5"
+          style={{ zIndex: 2 }}
           animate={{
             backgroundPosition: ["0% 0%", "100% 100%"],
           }}
@@ -67,11 +76,13 @@ export default function HomePage() {
         />
         <motion.div
           className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(56,182,255,0.1),transparent_50%)]"
+          style={{ zIndex: 2 }}
           animate={{ opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(40,129,181,0.1),transparent_50%)]"
+          style={{ zIndex: 2 }}
           animate={{ opacity: [0.4, 0.7, 0.4] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
         />
@@ -84,6 +95,7 @@ export default function HomePage() {
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
+              zIndex: 2,
             }}
             animate={{
               y: [0, -30, 0],
@@ -97,31 +109,26 @@ export default function HomePage() {
           />
         ))}
 
-        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container relative mx-auto px-4 sm:px-6 lg:px-8" style={{ zIndex: 10 }}>
           <div className="max-w-5xl mx-auto text-center">
-            <FadeIn delay={0.2}>
+            <ScrollReveal delay={100}>
               <Pulse duration={3}>
                 <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
                   <Star className="h-4 w-4 mr-2 fill-primary animate-pulse" />
                   Trusted by 300+ businesses worldwide
                 </div>
               </Pulse>
-            </FadeIn>
+            </ScrollReveal>
 
-            <FadeIn delay={0.3}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6">
-                <motion.span
-                  className="inline-block"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  Your Business-in-a-Box
-                </motion.span>
-              </h1>
-            </FadeIn>
+            <AnimatedText
+              text="Your Business-in-a-Box"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-6"
+              as="h1"
+              staggerDelay={40}
+              initialDelay={200}
+            />
 
-            <FadeIn delay={0.5}>
+            <ScrollReveal delay={300} direction="up">
               <p className="text-xl sm:text-2xl md:text-3xl text-muted-foreground mb-4">
                 Your entire digital ecosystem, ready in{" "}
                 <motion.span
@@ -133,13 +140,13 @@ export default function HomePage() {
                   10 days
                 </motion.span>
               </p>
-            </FadeIn>
+            </ScrollReveal>
 
-            <FadeIn delay={0.7}>
+            <ScrollReveal delay={400} direction="up">
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
                 Native full blended mobile application in your name (Apple & Google Play) + Ultra complete CRM. 100% White Label.
               </p>
-            </FadeIn>
+            </ScrollReveal>
 
             {/* CTA Buttons */}
             <FadeIn delay={0.9}>
@@ -176,42 +183,18 @@ export default function HomePage() {
                 </motion.div>
               </div>
             </FadeIn>
+          </div>
+        </div>
+      </section>
 
-            {/* Feature Cards with Stagger Animation */}
-            <StaggerContainer staggerDelay={0.15} className="grid md:grid-cols-3 gap-6 mb-12">
-              {features.map((feature, index) => {
-                const Icon = feature.icon;
-                return (
-                  <StaggerItem key={index}>
-                    <motion.div
-                      whileHover={{ y: -8, scale: 1.02 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      <Card className="border-2 hover:border-primary/50 transition-all duration-300 hover:shadow-xl bg-card/50 backdrop-blur-sm group">
-                        <CardContent className="p-6">
-                          <motion.div
-                            className={`flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br ${feature.color} mb-4 mx-auto`}
-                            whileHover={{ rotate: 360, scale: 1.1 }}
-                            transition={{ duration: 0.6 }}
-                          >
-                            <Icon className="h-6 w-6 text-white" />
-                          </motion.div>
-                          <h3 className="text-lg font-semibold mb-3 text-foreground">
-                            {feature.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            {feature.description}
-                          </p>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  </StaggerItem>
-                );
-              })}
-            </StaggerContainer>
+      {/* 3D Orbital Feature Cards Section */}
+      <OrbitalCards3D features={features} />
 
-            {/* Reinforcement Line */}
-            <ScaleIn delay={1.2}>
+      {/* Reinforcement Line Section */}
+      <section className="py-8 bg-gradient-to-b from-primary/5 to-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <ScrollReveal delay={200}>
               <motion.div
                 className="inline-block px-6 py-3 rounded-full bg-secondary/10 border border-secondary/20"
                 whileHover={{ scale: 1.05 }}
@@ -221,7 +204,7 @@ export default function HomePage() {
                   <span className="text-secondary font-semibold">single dashboard</span>
                 </p>
               </motion.div>
-            </ScaleIn>
+            </ScrollReveal>
           </div>
         </div>
       </section>
@@ -230,53 +213,50 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-gradient-to-b from-background to-accent/5">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
-            <FadeIn>
+            <ScrollReveal>
               <div className="text-center mb-12">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
-                  The CRM that handles{" "}
-                  <motion.span
-                    className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent inline-block"
-                    animate={{ backgroundPosition: ["0%", "100%", "0%"] }}
-                    transition={{ duration: 5, repeat: Infinity }}
-                  >
-                    absolutely everything
-                  </motion.span>
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                  Operations, finance, customer acquisition, team management and marketing. The CRM runs internal management: staff, HR, expenses, reporting. The client facing application handles bookings, payments and loyalty. Both stay synchronized.
-                </p>
+                <AnimatedText
+                  text="The CRM that handles absolutely everything"
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4"
+                  as="h2"
+                  staggerDelay={35}
+                />
+                <ScrollReveal delay={300}>
+                  <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+                    Operations, finance, customer acquisition, team management and marketing. The CRM runs internal management: staff, HR, expenses, reporting. The client facing application handles bookings, payments and loyalty. Both stay synchronized.
+                  </p>
+                </ScrollReveal>
               </div>
-            </FadeIn>
+            </ScrollReveal>
 
-            <ScaleIn delay={0.2}>
+            <ScrollReveal delay={200}>
               <Card className="border-2 bg-card/50 backdrop-blur-sm">
                 <CardContent className="p-8 md:p-12">
-                  <StaggerContainer staggerDelay={0.08} className="grid md:grid-cols-2 gap-6">
+                  <StaggeredGrid staggerDelay={80} className="grid md:grid-cols-2 gap-6">
                     {crmFeatures.map((feature, index) => (
-                      <StaggerItem key={index}>
-                        <motion.div
-                          className="flex items-start space-x-3 group"
-                          whileHover={{ x: 5 }}
-                          transition={{ type: "spring", stiffness: 300 }}
-                        >
-                          <div className="flex-shrink-0 mt-0.5">
-                            <motion.div
-                              className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary transition-colors"
-                              whileHover={{ rotate: 360, scale: 1.2 }}
-                              transition={{ duration: 0.4 }}
-                            >
-                              <Check className="h-3 w-3 text-primary group-hover:text-primary-foreground" />
-                            </motion.div>
-                          </div>
-                          <p className="text-sm md:text-base text-foreground/90 leading-relaxed">
-                            {feature}
-                          </p>
-                        </motion.div>
-                      </StaggerItem>
+                      <motion.div
+                        key={index}
+                        className="flex items-start space-x-3 group"
+                        whileHover={{ x: 5 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                      >
+                        <div className="flex-shrink-0 mt-0.5">
+                          <motion.div
+                            className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary transition-colors"
+                            whileHover={{ rotate: 360, scale: 1.2 }}
+                            transition={{ duration: 0.4 }}
+                          >
+                            <Check className="h-3 w-3 text-primary group-hover:text-primary-foreground" />
+                          </motion.div>
+                        </div>
+                        <p className="text-sm md:text-base text-foreground/90 leading-relaxed">
+                          {feature}
+                        </p>
+                      </motion.div>
                     ))}
-                  </StaggerContainer>
+                  </StaggeredGrid>
 
-                  <FadeIn delay={0.6}>
+                  <ScrollReveal delay={600}>
                     <div className="mt-10 text-center">
                       <Link href="/features">
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -287,12 +267,12 @@ export default function HomePage() {
                         </motion.div>
                       </Link>
                     </div>
-                  </FadeIn>
+                  </ScrollReveal>
                 </CardContent>
               </Card>
-            </ScaleIn>
+            </ScrollReveal>
 
-            <FadeIn delay={0.8}>
+            <ScrollReveal delay={800}>
               <div className="mt-12 text-center">
                 <Link href="/contact">
                   <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -302,7 +282,7 @@ export default function HomePage() {
                   </motion.div>
                 </Link>
               </div>
-            </FadeIn>
+            </ScrollReveal>
           </div>
         </div>
       </section>
