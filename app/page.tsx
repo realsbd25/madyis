@@ -7,14 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
-import { FadeIn, ScaleIn, SlideIn, StaggerContainer, StaggerItem, Floating, Pulse } from "@/components/animations/motion-components";
+import { FadeIn, SlideIn, StaggerContainer, StaggerItem, Floating, Pulse } from "@/components/animations/motion-components";
 import { AnimatedCounter } from "@/components/animations/animated-counter";
 import { MouseTrailCanvas } from "@/components/animations/mouse-trail-canvas";
 import { AnimatedText } from "@/components/animations/AnimatedText";
 import { ScrollReveal } from "@/components/animations/ScrollReveal";
 import { StaggeredGrid } from "@/components/animations/StaggeredGrid";
 import { OrbitalCards3D } from "@/components/animations/OrbitalCards3D";
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 export default function HomePage() {
   const features = [
